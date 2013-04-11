@@ -1,3 +1,4 @@
 .DS_Store
 *.pyc
 demo
+django_lineage.egg-info
