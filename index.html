@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Django Lineage by marcuswhybrow</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Django Lineage</h1>
+          <h2>Lightweight template tags for neater hierarchical navigation</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/marcuswhybrow/django-lineage/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/marcuswhybrow/django-lineage/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/marcuswhybrow/django-lineage" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p>Handling which navigation element is active in a particular template can become
+annoying. Template blocks can be defined and later overriden to "activate" a
+class on a particular navigational element, <strong>but thats gets ugly!</strong></p>
+
+<p><strong>Lineage makes things neater</strong> by defining your conditions centrally, and it
+looks like this:</p>
+
+<pre><code>{% load lineage %}
+
+&lt;ul&gt;
+    &lt;li class="{% ancestor '/home/' %}"&gt;&lt;a href="/home/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="{% ancestor '/blog/' %}"&gt;&lt;a href="/blog/"&gt;Blog&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="{% ancestor '/about/' %}"&gt;&lt;a href="/about/"&gt;About&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>When an <code>ancestor</code> tag is evaludated, it compares it's argument to the page URL.
+If the argument string matches the start of the current pages URL, it outputs
+"active". <strong>It's that simple!</strong></p>
+
+<p>Read on for accepted arguments:</p>
+
+<h2>Installation</h2>
+
+<p>Install using pip:</p>
+
+<pre><code>pip install django-lineage
+</code></pre>
+
+<p>Add <code>'lineage'</code> to <code>INSTALLED_APPS</code> in <code>settings.py</code>:</p>
+
+<pre><code>INSTALLED_APPS = (
+    'lineage',
+)
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>The <code>ancestor</code> tag needs to, of course, be loaded into your template:</p>
+
+<pre><code>{% load lineage %}
+</code></pre>
+
+<p>The simplest way to use Lineage is the aformentioned <code>ancestor</code> tag. Again if
+the argument matches the start of the page URL it outputs "active", this should
+handle most use cases:</p>
+
+<pre><code>{% ancestor '/arbitrary/path/' %}
+</code></pre>
+
+<p>But wait... <code>ancestor</code> can also handle variables, filters and all that stuff:</p>
+
+<pre><code>{% ancestor some_variable|somefilter %}
+</code></pre>
+
+<p>Or even full blown <code>url</code> tag type reverse resolution (Behind the scenes the
+<code>url</code> tag derives our expected argument - a URL path string.)</p>
+
+<pre><code>{% ancestor 'core:model_detail' model.pk %}
+</code></pre>
+
+<h3>Active?</h3>
+
+<p>By default <code>ancestor</code> outputs "active" if it's argument matches the start of
+the page URL. You can globally set the output of the <code>ancestor</code> tag by adding
+<code>LINEAGE_ANCESTOR_PHRASE = 'newphrase'</code> to <code>settings.py</code></p>
+
+<h3>Advanced</h3>
+
+<p>If fine-grain control is what your after, you'll be looking for the
+<code>ifancestor/endifancestor</code> combo:</p>
+
+<pre><code>{% ifancestor 'pattern_name' %}
+    This text here is only renderd if the
+    URL argument is an ancestor.
+{% endifancestor %}
+</code></pre>
+
+<p>It accepts the same exact arguments as <code>ancestor</code>, but allows you to define,
+on a per definition basis, what the output will be.</p>
+
+<h2>Assumptions</h2>
+
+<p>Lineage depends on sensible URL hierarchies, because it compares paths using
+regex matching. The <code>{% ifancestor '/base/' %}</code> block will be true if the
+current URL begins with that URL. For example <code>/base/</code> and <code>/base/section/page/</code>
+return true, but <code>/other/path/</code> and <code>/base</code> (missing trailing slash) will not.</p>
+
+<p><code>request</code> must be present in the request context, since it's used to determine
+the current URL. Django has <a href="https://docs.djangoproject.com/en/dev/ref/templates/api/#django-core-context-processors-request">a context preprocessor</a> that can insert it for
+you.</p>
+        </section>
+
+        <footer>
+          Django Lineage is maintained by <a href="https://github.com/marcuswhybrow">marcuswhybrow</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32675598-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
+  </body>
+</html>
