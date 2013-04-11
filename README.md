@@ -100,7 +100,7 @@ current URL begins with that URL. For example `/base/` and `/base/section/page/`
 return true, but `/other/path/` and `/base` (missing trailing slash) will not.
 
 `request` must be present in the request context, since it's used to determine
-the current URL. Django has [a context preprocessor][1] that can a insert it
-for you.
+the current URL. Django has [a context preprocessor][1] that can insert it for
+you.
 
 [1]: https://docs.djangoproject.com/en/dev/ref/templates/api/#django-core-context-processors-request
