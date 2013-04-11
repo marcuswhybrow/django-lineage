@@ -5,6 +5,8 @@ import re
 from django import template
 from django.template.defaulttags import url
 
+from .. import settings
+
 register = template.Library()
 
 
@@ -49,19 +51,34 @@ def ifancestor(parser, token):
     # Also pass all arguments to the original url tag
     url_node = url(parser, token)
 
-    # Send both the fir
-    return NavNode(arg, url_node, contents)
+    return AncestorNode(url_node, arg=arg, contents=contents)
 
 
-class NavNode(template.Node):
-    def __init__(self, arg, url_node, contents):
+@register.tag
+def ancestor(parser, token):
+    # If there is only one argument (2 including tag name)
+    # parse it as a variable
+    bits = token.split_contents()
+    if len(bits) == 2:
+        arg = parser.compile_filter(bits[1])
+    else:
+        arg = None
+
+    # Also pass all arguments to the original url tag
+    url_node = url(parser, token)
+
+    return AncestorNode(url_node, arg=arg)
+
+
+class AncestorNode(template.Node):
+    def __init__(self, url_node, arg=None, contents=None):
         self.arg = arg
         self.url_node = url_node
         self.contents = contents
 
     def get_path(self, context):
         # If the singular argument was provided and starts with a forward
-        # slash, use it as the path
+        # slash, use it as the path
         if self.arg is not None:
             arg_output = self.arg.resolve(context)
             if re.match('/', arg_output):
@@ -80,5 +97,10 @@ class NavNode(template.Node):
         # If the provided path is found at the root of the current path
         # render the contents of this tag
         if re.match(path, current_path):
-            return self.contents.render(context)
+            # Return either the contents of an ifancestor tag or the
+            # ANCESTOR_PHRASE if it's an ancestor tag
+            if self.contents is not None:
+                return self.contents.render(context)
+            else:
+                return settings.ANCESTOR_PHRASE
         return ''

@@ -1,57 +1,26 @@
 Django Lineage
 ==============
 
-Handling which navigation element is active in a particular template can get a
-bit ugly. Often, creating template blocks to drop an  "active" class on a
-particular tab or list element.
+Handling which navigation element is active in a particular template can become
+annoying. Template blocks can be defined and later overriden to "activate" a
+class on a particular navigational element, **but thats gets ugly!**
 
-Lineage makes things neater by defining your conditions once, and it
+**Lineage makes things neater** by defining your conditions centrally, and it
 looks like this:
 
     {% load lineage %}
 
     <ul>
-        <li {% ifancestor 'home' %}class="active"{% endifancestor %}">
-            <a href="{% url 'home' %}">Home</a>
-        </li>
-        <li {% ifancestor 'blog' %}class="active"{% endifancestor %}">
-            <a href="{% url 'blog' %}">Blog</a>
-        </li>
-        <li {% ifancestor 'about' %}class="active"{% endifancestor %}">
-            <a href="{% url 'about' %}">About</a>
-        </li>
+        <li class="{% ancestor '/home/' %}"><a href="/home/">Home</a></li>
+        <li class="{% ancestor '/blog/' %}"><a href="/blog/">Blog</a></li>
+        <li class="{% ancestor '/about/' %}"><a href="/about/">About</a></li>
     </ul>
 
-Whereas before we might have had the following:
+When an `ancestor` tag is evaludated, it compares it's argument to the page URL.
+If the argument string matches the start of the current pages URL, it outputs
+"active". **It's that simple!**
 
-`base.html` template:
-
-    <ul>
-        <li class="{% block home_class %}{% endblock %}">
-            <a href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="{% block blog_class %}{% endblock %}">
-            <a href="{% url 'blog' %}">Blog</a>
-        </li>
-        <li class="{% block about_class %}{% endblock %}">
-            <a href="{% url 'about' %}">About</a>
-        </li>
-    </ul>
-
-`home.html` template:
-
-    {% extends 'base.html' %}
-    {% block home_class %}active{% endblock %}
-
-`blog.html` template:
-
-    {% extends 'base.html' %}
-    {% block blog_class %}active{% endblock %}
-
-`about.html` template:
-
-    {% extends 'base.html' %}
-    {% block about_class %}active{% endblock %}
+Read on for accepted arguments:
 
 Installation
 ------------
@@ -60,7 +29,7 @@ Install using pip:
 
     pip install django-lineage
 
-Add to INSTALLED_APPS in your Django settings file:
+Add `'lineage'` to `INSTALLED_APPS` in `settings.py`:
 
     INSTALLED_APPS = (
         'lineage',
@@ -69,27 +38,44 @@ Add to INSTALLED_APPS in your Django settings file:
 Usage
 -----
 
-First, load Lineage's template library:
+The `ancestor` tag needs to, of course, be loaded into your template:
 
-    {% extends 'base.html'}
     {% load lineage %}
 
-Lineage provides a single template tag `ifancestor` which acts much like the
-`if`/`endif` template tag:
+The simplest way to use Lineage is the aformentioned `ancestor` tag. Again if
+the argument matches the start of the page URL it outputs "active", this should
+handle most use cases:
 
-    {% ifancestor '/arbitrary/path/' %}
-        This content is only displayed if the provided
-        path matches the start of the current URL
+    {% ancestor '/arbitrary/path/' %}
+
+But wait... `ancestor` can also handle variables, filters and all that stuff:
+
+    {% ancestor some_variable|somefilter %}
+
+Or even full blown `url` tag type reverse resolution (Behind the scenes the
+`url` tag derives our expected argument - a URL path string.)
+
+    {% ancestor 'core:model_detail' model.pk %}
+
+### Active?
+
+By default `ancestor` outputs "active" if it's argument matches the start of
+the page URL. You can globally set the output of the `ancestor` tag by adding
+`LINEAGE_ANCESTOR_PHRASE = 'newphrase'` to `settings.py`
+
+### Advanced
+
+If fine-grain control is what your after, you'll be looking for the
+`ifancestor/endifancestor` combo:
+
+    {% ifancestor 'pattern_name' %}
+        This text here is only renderd if the
+        URL argument is an ancestor.
     {% endifancestor %}
 
-`ifancestor` can also handle a variable:
+It accepts the same exact arguments as `ancestor`, but allows you to define,
+on a per definition basis, what the output will be.
 
-    {% ifancestor some_variable %}{% endifancestor %}
-
-Or even the same arguments used by the `url` template tag to return an absolute
-path given a view function or named pattern.
-
-    {% ifancestor 'core:model_detail' model.pk %}{% endifancestor %}
 
 Assumptions
 -----------
