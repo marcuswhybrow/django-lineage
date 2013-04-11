@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-lineage',
-    version='0.1',
+    version='0.1.1',
     description='Simplify navigation styling using the isanscestor template tag',
     long_description=open('README.md').read(),
     author='Marcus Whybrow',
