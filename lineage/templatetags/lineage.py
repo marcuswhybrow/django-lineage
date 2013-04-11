@@ -9,7 +9,7 @@ register = template.Library()
 
 
 @register.tag
-def ifanscestor(parser, token):
+def ifancestor(parser, token):
     """
     Returns the contents of the tag if the provided path consitutes the
     base of the current pages path.
@@ -17,8 +17,8 @@ def ifanscestor(parser, token):
     There are two ways to provide arguments to this tag. Firstly one may
     provide a single argument that starts with a forward slash. e.g.
 
-        {% ifanscestor '/path/to/page' %}...{% endifanscestor}
-        {% ifanscestor path_variable %}...{% endifanscestor}
+        {% ifancestor '/path/to/page' %}...{% endifancestor}
+        {% ifancestor path_variable %}...{% endifancestor}
 
     In this case the provided path will be used directly.
 
@@ -26,7 +26,7 @@ def ifanscestor(parser, token):
     be provided. They will be passed to the url tag and the resultant
     path will be used. e.g.
 
-        {% ifanscestor 'core:model:detail' model.pk %}...{% endifanscestor}
+        {% ifancestor 'core:model:detail' model.pk %}...{% endifancestor}
 
     Ultimately the provided path is matched against the path of the
     current page. If the provided path is found at the root of the current
@@ -35,7 +35,7 @@ def ifanscestor(parser, token):
 
     """
     # Grab the contents between
-    contents = parser.parse(('endifanscestor',))
+    contents = parser.parse(('endifancestor',))
     parser.delete_first_token()
 
     # If there is only one argument (2 including tag name)

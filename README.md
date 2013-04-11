@@ -11,13 +11,13 @@ looks like this:
     {% load lineage %}
 
     <ul>
-        <li {% ifanscestor 'home' %}class="active"{% endifanscestor %}">
+        <li {% ifancestor 'home' %}class="active"{% endifancestor %}">
             <a href="{% url 'home' %}">Home</a>
         </li>
-        <li {% ifanscestor 'blog' %}class="active"{% endifanscestor %}">
+        <li {% ifancestor 'blog' %}class="active"{% endifancestor %}">
             <a href="{% url 'blog' %}">Blog</a>
         </li>
-        <li {% ifanscestor 'about' %}class="active"{% endifanscestor %}">
+        <li {% ifancestor 'about' %}class="active"{% endifancestor %}">
             <a href="{% url 'about' %}">About</a>
         </li>
     </ul>
@@ -74,19 +74,19 @@ First, load Lineage's template library:
     {% extends 'base.html'}
     {% load lineage %}
 
-Lineage provides a single template tag `ifanscestor` which acts much like the
+Lineage provides a single template tag `ifancestor` which acts much like the
 `if`/`endif` template tag:
 
-    {% ifanscestor '/arbitrary/path/' %}
+    {% ifancestor '/arbitrary/path/' %}
         This content is only displayed if the provided
         path matches the start of the current URL
-    {% endifanscestor %}
+    {% endifancestor %}
 
-`ifanscestor` can also handle a variable:
+`ifancestor` can also handle a variable:
 
-    {% ifanscestor some_variable %}{% endifanscestor %}
+    {% ifancestor some_variable %}{% endifancestor %}
 
 Or even the same arguments used by the `url` template tag to return an absolute
 path given a view function or named pattern.
 
-    {% ifanscestor 'core:model_detail' model.pk %}{% endifanscestor %}
+    {% ifancestor 'core:model_detail' model.pk %}{% endifancestor %}
