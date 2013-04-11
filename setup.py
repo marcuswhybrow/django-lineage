@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-lineage',
-    version='0.1.1',
-    description='Simplify navigation styling using the isanscestor template tag',
+    version='0.2.0',
+    description='Lightweight template tags for neater hierarchical navigation',
     long_description=open('README.md').read(),
     author='Marcus Whybrow',
     author_email='pypi@marcuswhybrow.net',
