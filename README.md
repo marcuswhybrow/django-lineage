@@ -90,3 +90,17 @@ Or even the same arguments used by the `url` template tag to return an absolute
 path given a view function or named pattern.
 
     {% ifancestor 'core:model_detail' model.pk %}{% endifancestor %}
+
+Assumptions
+-----------
+
+Lineage depends on sensible URL hierarchies, because it compares paths using
+regex matching. The `{% ifancestor '/base/' %}` block will be true if the
+current URL begins with that URL. For example `/base/` and `/base/section/page/`
+return true, but `/other/path/` and `/base` (missing trailing slash) will not.
+
+`request` must be present in the request context, since it's used to determine
+the current URL. Django has [a context preprocessor][1] that can a insert it
+for you.
+
+[1]: https://docs.djangoproject.com/en/dev/ref/templates/api/#django-core-context-processors-request
