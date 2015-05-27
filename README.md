@@ -90,3 +90,11 @@ the current URL. Django has [a context preprocessor][1] that can insert it for
 you.
 
 [1]: https://docs.djangoproject.com/en/dev/ref/templates/api/#django-core-context-processors-request
+
+
+Similar Alternatives
+--------------------
+
+* [Django Menus][django-menus]
+
+[django-menus]: https://bitbucket.org/schinckel/django-menus/overview
