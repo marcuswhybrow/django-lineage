@@ -1,7 +1,7 @@
 Django Lineage
 ==============
 
-Which navigation element is "active" in a template? Lineage determins a nav elements sate by inspecting the URL:
+Which navigation element is "active" in a template? Lineage determines a navigation elements state by inspecting the page URL:
 
     {% load lineage %}
 
