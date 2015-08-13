@@ -1,12 +1,7 @@
 Django Lineage
 ==============
 
-Handling which navigation element is active in a particular template can become
-annoying. Template blocks can be defined and later overriden to "activate" a
-class on a particular navigational element, **but thats gets ugly!**
-
-**Lineage makes things neater** by defining your conditions centrally, and it
-looks like this:
+Which navigation element is "active" in a template? Lineage determins a nav elements sate by inspecting the URL:
 
     {% load lineage %}
 
@@ -16,11 +11,7 @@ looks like this:
         <li class="{% ancestor '/about/' %}"><a href="/about/">About</a></li>
     </ul>
 
-When an `ancestor` tag is evaludated, it compares it's argument to the page URL.
-If the argument string matches the start of the current pages URL, it outputs
-"active". **It's that simple!**
-
-Read on for accepted arguments:
+If the argument of `ancestor` matches the start of the URL (e.g. this nav element is at least a parent of this page), it outputs "active". **It's that simple!**
 
 Installation
 ------------
@@ -57,7 +48,7 @@ Or even full blown `url` tag type reverse resolution (Behind the scenes the
 
     {% ancestor 'core:model_detail' model.pk %}
 
-### Active?
+### "active"?
 
 By default `ancestor` outputs "active" if it's argument matches the start of
 the page URL. You can globally set the output of the `ancestor` tag by adding
