@@ -33,52 +33,38 @@ The `ancestor` tag needs to, of course, be loaded into your template:
 
     {% load lineage %}
 
-The simplest way to use Lineage is the aformentioned `ancestor` tag. Again if
-the argument matches the start of the page URL it outputs "active", this should
-handle most use cases:
+The first way to use Lineage is the aformentioned `ancestor` tag. Again if the argument matches the start of the page URL it outputs "active", this should handle most use cases:
 
     {% ancestor '/arbitrary/path/' %}
 
-But wait... `ancestor` can also handle variables, filters and all that stuff:
+`ancestor` can also handle variables, filters and all that stuff:
 
     {% ancestor some_variable|somefilter %}
 
-Or even full blown `url` tag type reverse resolution (Behind the scenes the
-`url` tag derives our expected argument - a URL path string.)
+Most importantly it also accepts `url` tag type reverse resolution (Behind the scenes the `url` tag derives our expected argument - a URL path string.)
 
     {% ancestor 'core:model_detail' model.pk %}
 
-### "active"?
+### Output Defaults to "active"
 
-By default `ancestor` outputs "active" if it's argument matches the start of
-the page URL. You can globally set the output of the `ancestor` tag by adding
-`LINEAGE_ANCESTOR_PHRASE = 'newphrase'` to `settings.py`
+By default `ancestor` outputs "active" on a match. You can alter this default by adding `LINEAGE_ANCESTOR_PHRASE = 'newphrase'` to `settings.py`
 
-### Advanced
+### Overring Output
 
-If fine-grain control is what your after, you'll be looking for the
-`ifancestor/endifancestor` combo:
+Override output on demand using the `ifancestor/endifancestor` combo:
 
     {% ifancestor 'pattern_name' %}
         This text here is only renderd if the
         URL argument is an ancestor.
     {% endifancestor %}
 
-It accepts the same exact arguments as `ancestor`, but allows you to define,
-on a per definition basis, what the output will be.
-
 
 Assumptions
 -----------
 
-Lineage depends on sensible URL hierarchies, because it compares paths using
-regex matching. The `{% ifancestor '/base/' %}` block will be true if the
-current URL begins with that URL. For example `/base/` and `/base/section/page/`
-return true, but `/other/path/` and `/base` (missing trailing slash) will not.
+Lineage depends on sensible URL hierarchies, because it compares paths using regex matching. `{% ancestor '/base/' %}` will fire if the current URL begins with `/base/`. For example `/base/` and `/base/section/page/` return true, but `/other/path/` and `/base` (missing trailing slash) will not.
 
-`request` must be present in the request context, since it's used to determine
-the current URL. Django has [a context preprocessor][1] that can insert it for
-you.
+`request` must be present in the request context, since it's used to determine the current URL. Django has [a context preprocessor][1] that can insert it for you.
 
 [1]: https://docs.djangoproject.com/en/dev/ref/templates/api/#django-core-context-processors-request
 
